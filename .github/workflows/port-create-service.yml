@@ -18,7 +18,7 @@ jobs:
   scaffold-service:
     runs-on: ubuntu-latest
     env:
-      ORG_NAME: MayaMargalit
+      ORG_NAME: BarenboimAlina
       PORT_RUN_ID: ${{ fromJson(inputs.port_context).runId }}
     steps:
       - uses: actions/checkout@v4
