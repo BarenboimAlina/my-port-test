@@ -1,4 +1,6 @@
+port-create-service.yml
 name: Scaffold a new service
+
 on:
   workflow_dispatch:
     inputs:
@@ -14,14 +16,20 @@ on:
         required: true
         description: Includes the action's run id
         type: string
+
 jobs:
   scaffold-service:
     runs-on: ubuntu-latest
     env:
       ORG_NAME: BarenboimAlina
-      PORT_RUN_ID: ${{ fromJson(inputs.port_context).runId }}
+
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Extract runId from port_context
+        run: |
+          echo "PORT_RUN_ID=$(echo '${{ inputs.port_context }}' | jq -r .runId)" >> $GITHUB_ENV
+
       - name: Create a log message
         uses: port-labs/port-github-action@v1
         with:
@@ -31,6 +39,7 @@ jobs:
           operation: PATCH_RUN
           runId: ${{ env.PORT_RUN_ID }}
           logMessage: "Starting scaffolding of service and repository: ${{ inputs.service_name }}"
+
       - name: Create GitHub Repository
         uses: port-labs/cookiecutter-gha@v1.1.1
         with:
@@ -43,6 +52,9 @@ jobs:
           cookiecutterTemplate: https://github.com/lacion/cookiecutter-golang
           blueprintIdentifier: "githubRepository"
           organizationName: ${{ env.ORG_NAME }}
+          createPortEntity: true
+
+
       - name: Create Service in Port with Repository Relation
         uses: port-labs/port-github-action@v1
         with:
@@ -55,8 +67,9 @@ jobs:
           blueprint: "service"
           relations: |
             {
-              "githubRepository": "${{ inputs.service_name }}"
+              "repository": "${{ env.ORG_NAME }}/${{ inputs.service_name }}"
             }
+
       - name: Create a log message
         uses: port-labs/port-github-action@v1
         with:
