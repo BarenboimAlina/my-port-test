@@ -1,4 +1,3 @@
-port-create-service.yml
 name: Scaffold a new service
 
 on:
