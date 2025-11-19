@@ -2,3 +2,4 @@
    
    Testing Claude detection with public repository.
 claude
+claude2
