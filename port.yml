@@ -3,7 +3,7 @@
 - identifier: "BarenboimAlina/my-port-test"
   blueprint: service 
   properties:
-    type: "backend"
+    type: "frontend"
     lifecycle: "Production"
   relations:
     domain: "payment"
